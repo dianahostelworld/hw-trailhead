@@ -17,6 +17,9 @@ Search Console clicks, impressions, positions and searches.
 
 == Changelog ==
 
+= 0.4.1 =
+* Refresh schedule: change the Every column for as many articles as you like, then click Save changes at the bottom. The page no longer reloads after each change, and you stay on the same tab, filter, sort and page.
+
 = 0.4.0 =
 * Works with Content Health: Queue for refresh there puts the article on Trailhead's refresh list for the morning batch; every refresh sends Claude the article's Content Health brief; the Content planner's Start in Trailhead opens New article filled in; finished refreshes show up in Content Health's Refresh impact, measured from the latest refresh.
 

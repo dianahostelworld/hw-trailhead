@@ -366,6 +366,26 @@ class TH_Actions {
 				self::back( array( 'view' => 'refresh_item', 'post' => $post ), __( 'Queued for Claude. The revised version appears here after the next run.', 'hw-trailhead' ) );
 				break;
 
+			case 'refresh_bulk':
+				$n = 0;
+				foreach ( (array) ( $_POST['interval'] ?? array() ) as $pid => $iv ) {
+					$pid = (int) $pid;
+					$iv  = sanitize_key( $iv );
+					$was = get_post_meta( $pid, '_th_interval', true );
+					if ( $pid && isset( TH_Schedule::INTERVALS[ $iv ] ) && $iv !== ( $was ? $was : 'none' ) ) {
+						TH_Schedule::set_interval( $pid, $iv );
+						$n++;
+					}
+				}
+				$keep = array( 'view' => 'refresh' );
+				foreach ( array( 'f', 'type', 'sort', 'p' ) as $k ) {
+					if ( ! empty( $_POST[ $k ] ) ) {
+						$keep[ $k ] = sanitize_key( $_POST[ $k ] );
+					}
+				}
+				self::back( $keep, $n ? sprintf( /* translators: %d: count */ _n( 'Saved %d article.', 'Saved %d articles.', $n, 'hw-trailhead' ), $n ) : __( 'Nothing changed.', 'hw-trailhead' ) );
+				break;
+
 			case 'refresh_save':
 				if ( $post ) {
 					TH_Schedule::set_interval( $post, sanitize_key( $_POST['interval'] ?? '' ) );

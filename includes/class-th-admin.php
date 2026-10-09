@@ -908,6 +908,8 @@ class TH_Admin {
 			return;
 		}
 		?>
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" id="th-bulk">
+		<?php echo TH_Actions::fields( 'refresh_bulk', array( 'f' => $f, 'type' => $tf, 'sort' => $sort, 'p' => $paged ) ); // phpcs:ignore ?>
 		<div class="th-tbl"><table class="th-big">
 			<thead><tr><th><?php esc_html_e( 'Article', 'hw-trailhead' ); ?></th><th><?php esc_html_e( 'Refresh type', 'hw-trailhead' ); ?></th><th><?php echo esc_html( sprintf( /* translators: %d: months */ __( 'Clicks (%dm)', 'hw-trailhead' ), $m ) ); ?></th><th><?php esc_html_e( 'Last 90 days', 'hw-trailhead' ); ?></th><th><?php esc_html_e( 'Impressions', 'hw-trailhead' ); ?></th><th><?php esc_html_e( 'CTR', 'hw-trailhead' ); ?></th><th><?php esc_html_e( 'Position', 'hw-trailhead' ); ?></th><th><?php esc_html_e( 'Every', 'hw-trailhead' ); ?></th><th><?php esc_html_e( 'Due', 'hw-trailhead' ); ?></th><th><span class="screen-reader-text"><?php esc_html_e( 'Action', 'hw-trailhead' ); ?></span></th></tr></thead>
 			<tbody>
@@ -925,7 +927,7 @@ class TH_Admin {
 					<td class="num"><?php echo esc_html( self::n( $r['impressions'] ) ); ?></td>
 					<td class="num"><?php echo null !== $r['ctr'] ? esc_html( number_format_i18n( $r['ctr'], 1 ) . '%' ) : '–'; ?></td>
 					<td class="num"><?php echo $r['position'] ? esc_html( number_format_i18n( $r['position'], 1 ) ) : '–'; ?></td>
-					<td><form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>"><?php echo TH_Actions::fields( 'refresh_save', array( 'post' => $id, 'return' => 'refresh' ) ); // phpcs:ignore ?><label class="screen-reader-text" for="th-iv-<?php echo esc_attr( $id ); ?>"><?php esc_html_e( 'Interval', 'hw-trailhead' ); ?></label><select id="th-iv-<?php echo esc_attr( $id ); ?>" name="interval" class="th-sel" data-autosubmit><?php foreach ( $labels as $k => $l ) { echo '<option value="' . esc_attr( $k ) . '"' . selected( $r['interval'] ?: 'none', $k, false ) . '>' . esc_html( $l ) . '</option>'; } ?></select></form></td>
+					<td><label class="screen-reader-text" for="th-iv-<?php echo esc_attr( $id ); ?>"><?php esc_html_e( 'Interval', 'hw-trailhead' ); ?></label><select id="th-iv-<?php echo esc_attr( $id ); ?>" name="interval[<?php echo esc_attr( $id ); ?>]" class="th-sel" data-was="<?php echo esc_attr( $r['interval'] ?: 'none' ); ?>"><?php foreach ( $labels as $k => $l ) { echo '<option value="' . esc_attr( $k ) . '"' . selected( $r['interval'] ?: 'none', $k, false ) . '>' . esc_html( $l ) . '</option>'; } ?></select></td>
 					<td class="num"><?php
 					if ( ! $r['interval'] || 'none' === $r['interval'] ) {
 						echo '–';
@@ -942,6 +944,20 @@ class TH_Admin {
 			<?php endforeach; ?>
 			</tbody>
 		</table></div>
+		<div class="th-savebar"><span class="th-muted th-small" id="th-bulk-n"><?php esc_html_e( 'No changes yet.', 'hw-trailhead' ); ?></span><button class="th-btn p"><?php esc_html_e( 'Save changes', 'hw-trailhead' ); ?></button></div>
+		</form>
+		<script>
+		( function () {
+			var f = document.getElementById( 'th-bulk' ), n = document.getElementById( 'th-bulk-n' ), dirty = false;
+			f.addEventListener( 'change', function () {
+				var c = Array.prototype.filter.call( f.querySelectorAll( 'select[data-was]' ), function ( s ) { return s.value !== s.dataset.was; } ).length;
+				dirty = c > 0;
+				n.textContent = c ? c + ( 1 === c ? ' <?php echo esc_js( __( 'change not saved yet', 'hw-trailhead' ) ); ?>' : ' <?php echo esc_js( __( 'changes not saved yet', 'hw-trailhead' ) ); ?>' ) : '<?php echo esc_js( __( 'No changes yet.', 'hw-trailhead' ) ); ?>';
+			} );
+			f.addEventListener( 'submit', function () { dirty = false; } );
+			window.addEventListener( 'beforeunload', function ( e ) { if ( dirty ) { e.preventDefault(); e.returnValue = ''; } } );
+		} )();
+		</script>
 		<?php
 		$pages = (int) ceil( $total / $per );
 		if ( $pages > 1 ) {

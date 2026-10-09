@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Hostelworld Trailhead
  * Description:       The blog's content pipeline: opportunities, research, ideas, briefs, drafts and a refresh schedule. Claude does the writing through a queue that runs on your own Claude account; you approve everything. Needs Hostelworld Content Health for Search Console data.
- * Version:           0.4.0
+ * Version:           0.4.1
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Hostelworld
@@ -11,7 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'TH_VERSION', '0.4.0' );
+define( 'TH_VERSION', '0.4.1' );
 define( 'TH_DIR', plugin_dir_path( __FILE__ ) );
 define( 'TH_URL', plugin_dir_url( __FILE__ ) );
 

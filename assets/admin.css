@@ -121,3 +121,4 @@
 .th-diff .diff-deletedline{background:#fdecea}.th-diff .diff-addedline{background:#e7f6ec}
 .th-diff del{background:#f7c6c0;text-decoration:line-through}.th-diff ins{background:#b9e6c7;text-decoration:none}
 .th-diff td.diff-context{color:#6c737f}
+.th-wrap .th-savebar{position:sticky;bottom:0;z-index:5;display:flex;align-items:center;justify-content:flex-end;gap:16px;padding:12px 16px;margin-top:12px;background:var(--surface,#fff);border:1px solid var(--line,#dadde1);border-radius:12px;box-shadow:0 -4px 12px rgba(0,0,0,.06)}
